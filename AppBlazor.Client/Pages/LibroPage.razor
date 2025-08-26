@@ -1,10 +1,64 @@
-﻿@page "/libro"
+﻿@page "/pedidos"
+@inject ListaPedidos listaPedidos
 @inject NavigationManager navigationManager
-<h3>LibroPage</h3>
-<button @onclick="navegar" class="btn btn-primary">Navegar a Libro Form Page</button>
+
+<h3>Pedidos</h3>
+
+<button @onclick="nuevoPedido" class="btn btn-primary mb-3">Nuevo Pedido</button>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            <th>Total</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var pedido in pedidos)
+        {
+            <tr>
+                <td>@pedido.idPedido</td>
+                <td>@pedido.cliente</td>
+                <td>@pedido.fecha.ToShortDateString()</td>
+                <td>@pedido.estado</td>
+                <td>@pedido.total.ToString("C")</td>
+                <td>
+                    <button class="btn btn-warning btn-sm me-1" @onclick="() => editarPedido(pedido)">Editar</button>
+                    <button class="btn btn-danger btn-sm" @onclick="() => eliminarPedido(pedido)">Eliminar</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
 @code {
-	private void navegar()
-	{
-		navigationManager.NavigateTo("/formLibro");
-	}
+    // Lista de pedidos obtenida del servicio
+    private List<Pedido> pedidos = new List<Pedido>();
+
+    protected override void OnInitialized()
+    {
+        pedidos = listaPedidos.GetPedidos();
+    }
+
+    private void nuevoPedido()
+    {
+        navigationManager.NavigateTo("/formPedido");
+    }
+
+    private void editarPedido(Pedido pedido)
+    {
+        // Navega al formulario pasando el id del pedido a editar
+        navigationManager.NavigateTo($"/formPedido?id={pedido.idPedido}");
+    }
+
+    private void eliminarPedido(Pedido pedido)
+    {
+        listaPedidos.EliminarPedido(pedido.idPedido);
+        pedidos = listaPedidos.GetPedidos(); // refrescar la lista
+        StateHasChanged();
+    }
 }

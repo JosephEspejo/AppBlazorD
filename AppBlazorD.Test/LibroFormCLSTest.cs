@@ -16,7 +16,7 @@ namespace AppBlazorD.Test
         [Fact]
         public void ValidacionCamposVacios()
         {
-            var libro = new LibroFormCLS();
+            var libro = new Pedido();
 
             var errores = validaModelo(libro);
 
@@ -32,7 +32,7 @@ namespace AppBlazorD.Test
         [Fact]
         public void ValidacionCamposCorrectos()
         {
-            var libro = new LibroFormCLS
+            var libro = new Pedido
             {
                 idLibro = 1,
                 titulo = "Libro de prueba",
